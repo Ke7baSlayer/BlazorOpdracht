@@ -1,0 +1,80 @@
+﻿@page "/Funfacts"
+
+<div class="container">
+
+    <h3>Opdracht geboortedatum FunFacts</h3>
+
+    <div class="row">
+        <div class="col-md-@colClass">
+            @if (showForm)
+            {
+                <form name="frmLeeftijd">
+                    <div class="row ">
+                        <div class="col-auto mb-3">
+                            <label for="geboortedatum">Je geboortedatum</label>
+                            <input @bind="geboortedatum" type="date" id="geboortedatum" min="1970-01-01">
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-auto mb-3">
+                            <button @onclick="ProcessDatum" class="btn btn-primary btn-lg  mb-2" id="check" type="button">
+                                Check
+                                FunFacts
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            } else
+            {
+                <pre>@result</pre>
+
+                <button @onclick="Restart" class="btn btn-primary btn-lg  mb-2" id="back" type="button">Opnieuw</button>
+            }
+        </div>
+    </div>
+
+</div>
+
+@code {
+    int colClass = 4;
+    private bool showForm = true;
+    string result = "";
+    DateTime geboortedatum;
+
+    private void ProcessDatum()
+    {
+        if (geboortedatum != null)
+        {
+            DateTime birthDate = geboortedatum;
+            DateTime currentDate = DateTime.Now;
+
+            string gbdag = birthDate.ToString("dddd", new System.Globalization.CultureInfo("nl-BE"));
+            string gbfull = birthDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+            string today = currentDate.ToString("dddd dd MMM yyyy", new System.Globalization.CultureInfo("nl-BE"));
+
+            double daysOnEarth = (currentDate - birthDate).TotalDays;
+
+            DateTime futureDate = currentDate.AddMilliseconds(daysOnEarth * 24 * 3600 * 1000);
+
+            string futureDateString = futureDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("nl-BE"));
+
+            result = $"Je bent geboren op {gbdag} {gbfull}\n" +
+                     $"Vandaag is het {today}\n" +
+                     $"Je loopt al {Math.Round(daysOnEarth)} dagen op deze wereldbol rond.\n" +
+                     $"Je zal vermoedelijk sterven op {futureDateString}\n";
+        }
+        else
+        {
+            result = "Voer een geldige geboortedatum in.";
+        }
+        colClass = 12;
+        showForm = false;
+    }
+    private void Restart()
+    {
+        colClass = 4;
+        showForm = true;
+    }
+
+}

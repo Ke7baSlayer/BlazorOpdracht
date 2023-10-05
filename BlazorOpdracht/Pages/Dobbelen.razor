@@ -1,0 +1,172 @@
+﻿@page "/Dobbelen"
+<h2>Dobbelspel</h2>
+<div class="container mt-4">
+    <div class="row">
+
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[0]" id="speler1">
+                <div class="card-body">
+                    <h5 class="card-title">speler 1</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[1]" id="speler2">
+                <div class="card-body">
+                    <h5 class="card-title">speler 2</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[2]" id="speler3">
+                <div class="card-body">
+                    <h5 class="card-title">speler 3</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[3]" id="speler4">
+                <div class="card-body">
+                    <h5 class="card-title">speler 4</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[4]" id="speler5">
+                <div class="card-body">
+                    <h5 class="card-title">speler 5</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[5]" id="speler6">
+                <div class="card-body">
+                    <h5 class="card-title">speler 6</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[6]" id="speler7">
+                <div class="card-body">
+                    <h5 class="card-title">speler 7</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[7]" id="speler8">
+                <div class="card-body">
+                    <h5 class="card-title">speler 8</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[8]" id="speler9">
+                <div class="card-body">
+                    <h5 class="card-title">speler 9</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[9]" id="speler10">
+                <div class="card-body">
+                    <h5 class="card-title">speler 10</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[10]" id="speler11">
+                <div class="card-body">
+                    <h5 class="card-title">speler 11</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-white @classes[11]" id="speler12">
+                <div class="card-body">
+                    <h5 class="card-title">speler 12</h5>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!-- // row -->
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-6 align-self-center text-center">
+            <div class="alert alert-info" id="result" role="alert" style="display: @style;">@alert</div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-3 text-center">
+            <h4>Geef een getal (1-12):</h4>
+            <input type="number" @bind="userInput" min="1" max="12" />
+        </div>
+        <div class="col-3 text-center">
+            <button @onclick="PlayClick" id="play" type="Button" class="btn btn-primary">PLAY</button>
+        </div>
+        <div class="col-3 text-center">
+            <button @onclick="ResetClick" id="reset" type="Button" class="btn btn-danger">RESET</button>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    string[] classes = { "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", "bg-secondary", };
+    string? alert;
+    string style = "none";
+    int userInput = 0;
+
+    private void PlayClick()
+    {
+        alert = "";
+        int count = 0;
+        if (userInput == 0)
+        {
+            alert = "geef een getal in!";
+            style = "block";
+        }
+        else
+        {
+            for (int i = 0; i <= 11; i++)
+            {
+                classes[i] = "bg-secondary";
+            }
+            for (int i = 0; i <= 11; i++)
+            {
+                int dobbel = 0;
+                Random random = new Random();
+                dobbel = random.Next(1, 7);
+                if (dobbel == 6)
+                {
+                    classes[i] = "bg-success";
+                    count++;
+                }
+            }
+            alert = count + " speler(s) gooide een 6.";
+            style = "block";
+            if (userInput == count)
+            {
+                alert += " Gewonnen, je had het juist!";
+            }else
+            {
+                alert += " Niet juist !";
+            }
+        }
+    }
+    private void ResetClick()
+    {
+        style = "none";
+        alert = "";
+        for (int i = 0; i <= 11; i++)
+        {
+            classes[i] = "bg-secondary";
+        }
+
+    }
+
+}

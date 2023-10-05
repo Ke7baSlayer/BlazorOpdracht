@@ -1,0 +1,44 @@
+﻿@page "/Foto"
+<main class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Random foto</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Random foto
+                </div>
+                <div class="card-body text-center">
+                    <img src="images/@image" id="foto">
+                    <br>
+                    <button @onclick="Click" id="btnRandom" class="btn btn-primary mt-2">Random foto</button>
+                    <div id="logging">@log</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@code {
+    string[] images = { "breakfast.jpg", "flower.jpg", "flower_red.jpg", "fontain.jpg", "lunch.jpg", "sunset.jpg" };
+    string image = "";
+    string log; 
+    private void Click()
+    {
+        Random rndm = new Random();
+        int random = rndm.Next(0, 6);
+        image = images[random];
+        log = $"Geklikt op nieuwe random (Vorige waarde = {random})";
+        for (int i = images.Length - 1; i > 0; i--)
+        {
+            int j = new Random().Next(0, i + 1);
+
+            
+            string temp = images[i];
+            images[i] = images[j];
+            images[j] = temp;
+        }
+    }
+}

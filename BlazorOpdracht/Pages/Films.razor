@@ -1,0 +1,101 @@
+﻿@page "/Films"
+@using System.Text.Json;
+@using MovieSearchResponse
+
+<h1>Films zoeken (OMDB API)</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form id="searchForm" class="form-inline" @onsubmit="SearchMovies">
+                <div class="form-group m-2">
+                    <label for="zoekterm">Zoekterm</label>
+                    <input type="text"
+                           class="form-control mx-2"
+                           id="zoekterm"
+                           name="zoekterm"
+                    @bind="searchTerm" />
+                </div>
+                <button type="submit" id="buttonZoeken" class="btn btn-primary m-2">
+                    Zoeken
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row m-2">
+        <div class="col-md-12">
+            <div class="row p-2">
+                <div class="alert @alertClass" id="divMsg">@alertMessage</div>
+            </div>
+            <div class="row p-3">
+                @if (movies != null)
+                {
+                    @foreach (var movie in movies.Search)
+                    {
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="card shadow-sm">
+                                <img src="@movie.Poster" alt="@movie.Title" class="img-responsive">
+                                <div class="card-body">
+                                    <p class="card-text">@movie.Title</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">@movie.Year</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string searchTerm = "";
+    private MovieSearchResponse movies;
+    private string alertClass = "hidden";
+    private string alertMessage = "";
+
+    private async Task SearchMovies()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            ShowErrorMessage("Search term is required.");
+            return;
+        }
+
+        try
+        {
+            var httpClient = new HttpClient();
+            var apiUrl = $"https://www.omdbapi.com/?s={searchTerm}&type=movie&apikey=542d740a";
+            var response = await httpClient.GetStringAsync(apiUrl);
+            movies = JsonSerializer.Deserialize<MovieSearchResponse>(response);
+
+            if (movies != null && movies.Response == "True")
+            {
+                HideErrorMessage();
+            }
+            else
+            {
+                ShowErrorMessage("No results found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage($"An error occurred: {ex.Message} {searchTerm}");
+        }
+    }
+
+    private void ShowErrorMessage(string message)
+    {
+        alertClass = "alert alert-danger";
+        alertMessage = message;
+    }
+
+    private void HideErrorMessage()
+    {
+        alertClass = "hidden";
+        alertMessage = "";
+    }
+}
